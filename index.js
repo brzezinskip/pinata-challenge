@@ -23,8 +23,15 @@ const typeDefs = gql`
     created_at: String
     author: User!
   }
+  type PostsConnection {
+    edges: [Post]!
+    pageInfo: PageInfo!
+  }
+  type PageInfo {
+    endCursor: String!
+  }
   type Query {
-    posts(cursor: String, limit: Int): [Post]!
+    posts(cursor: String, limit: Int): PostsConnection!
     post(id: ID!): Post!
     user(id: ID!): User!
   }
