@@ -1,6 +1,7 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
 const { post } = require("./src/resolvers/post");
+const { user } = require("./src/resolvers/user");
 
 const typeDefs = gql`
   input createPostInput {
@@ -23,8 +24,9 @@ const typeDefs = gql`
     author: User!
   }
   type Query {
-    posts: [Post]
-    post(id: ID!): Post
+    posts(cursor: String, limit: Int): [Post]!
+    post(id: ID!): Post!
+    user(id: ID!): User!
   }
   type Mutation {
     createPost(input: createPostInput): String!
@@ -34,16 +36,12 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    ...post.queries
+    ...post.queries,
+    ...user.queries
   },
   Post: {
     author({ user_id }) {
-      return {
-        id: user_id,
-        first_name: "asd",
-        last_name: "zxc",
-        email: "a@b.com"
-      };
+      return user.byId(user_id);
     }
   },
   Mutation: {

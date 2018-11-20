@@ -22,7 +22,13 @@ const remove = id =>
     .then(([id]) => id);
 
 const queries = {
-  posts: all,
+  posts(_, { cursor, limit }, ctx, info) {
+    return cursor
+      ? all()
+          .where("created_at", ">", new Date(parseInt(cursor)))
+          .limit(limit)
+      : all().limit(limit);
+  },
   post(_, { id }, ctx, info) {
     return byId(id);
   }
