@@ -23,11 +23,18 @@ const remove = id =>
 
 const queries = {
   posts(_, { cursor, limit }, ctx, info) {
-    return cursor
-      ? all()
-          .where("created_at", ">", new Date(parseInt(cursor)))
-          .limit(limit)
-      : all().limit(limit);
+    let query = all().orderBy("created_at", "DESC");
+    query = cursor
+      ? query.where("created_at", "<", new Date(parseInt(cursor))).limit(limit)
+      : query.limit(limit);
+    return query.then(rows => {
+      return {
+        edges: rows,
+        pageInfo: {
+          endCursor: rows[rows.length - 1].created_at
+        }
+      };
+    });
   },
   post(_, { id }, ctx, info) {
     return byId(id);
