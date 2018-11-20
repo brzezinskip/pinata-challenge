@@ -1,15 +1,36 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
+const { post } = require("./src/resolvers/post");
 
 const typeDefs = gql`
+  input createPostInput {
+    body: String
+    title: String!
+    user_id: ID!
+  }
+  type post {
+    id: ID!
+    title: String!
+    body: String
+    user_id: ID!
+    created_at: String
+  }
   type Query {
-    hello: String
+    posts: [post]
+    post(id: ID!): post
+  }
+  type Mutation {
+    createPost(input: createPostInput): String!
+    removePost(id: ID!): String!
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => "Hello world!"
+    ...post.queries
+  },
+  Mutation: {
+    ...post.mutations
   }
 };
 
