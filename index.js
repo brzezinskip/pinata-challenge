@@ -8,16 +8,23 @@ const typeDefs = gql`
     title: String!
     user_id: ID!
   }
-  type post {
+  type User {
+    id: ID!
+    first_name: String
+    last_name: String
+    email: String!
+  }
+  type Post {
     id: ID!
     title: String!
     body: String
     user_id: ID!
     created_at: String
+    author: User!
   }
   type Query {
-    posts: [post]
-    post(id: ID!): post
+    posts: [Post]
+    post(id: ID!): Post
   }
   type Mutation {
     createPost(input: createPostInput): String!
@@ -28,6 +35,16 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     ...post.queries
+  },
+  Post: {
+    author({ user_id }) {
+      return {
+        id: user_id,
+        first_name: "asd",
+        last_name: "zxc",
+        email: "a@b.com"
+      };
+    }
   },
   Mutation: {
     ...post.mutations

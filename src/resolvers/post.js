@@ -1,21 +1,21 @@
-const db = require("../../db/knex");
+const { db, tables } = require("../../db/knex");
 
 const byId = id =>
-  db("posts")
+  db(tables.POSTS)
     .where({ id })
     .first()
     .then(p => p);
 
-const all = () => db.select().table("posts");
+const all = () => db.select().table(tables.POSTS);
 
 const create = ({ title, body, user_id }) =>
-  db("posts")
+  db(tables.POSTS)
     .insert({ title, body, user_id })
     .returning("id")
     .then(([id]) => id);
 
 const remove = id =>
-  db("posts")
+  db(tables.POSTS)
     .where({ id })
     .del()
     .returning("id")
