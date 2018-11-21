@@ -21,14 +21,16 @@ const create = ({ body, user_id, post_id }) =>
   db(tables.COMMENTS)
     .insert({ body, user_id, post_id })
     .returning("id")
-    .then(([id]) => id);
+    .then(([id]) => id)
+    .catch(e => e);
 
 const remove = id =>
   db(tables.COMMENTS)
     .where({ id })
     .del()
     .returning("id")
-    .then(([id]) => id);
+    .then(([id]) => id)
+    .catch(e => e);
 
 const queries = {
   comments(_, { input: { limit, after, orderBy } = {} }, ctx, info) {
@@ -59,6 +61,10 @@ module.exports = {
   comment: {
     queries,
     mutations,
-    commentsByPostId
+    commentsByPostId,
+    byId,
+    all,
+    create,
+    remove
   }
 };
