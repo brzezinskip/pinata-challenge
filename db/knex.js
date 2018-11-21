@@ -6,6 +6,7 @@ module.exports = {
   db: require("knex")(config),
   tables: {
     POSTS: "posts",
-    USERS: "users"
+    USERS: "users",
+    COMMENTS: "comments"
   }
 };
