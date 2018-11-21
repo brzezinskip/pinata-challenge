@@ -9,13 +9,11 @@ const byId = id =>
 
 const all = () => db.select().table(tables.COMMENTS);
 
-const commentsByPostId = id => {
-  const data = db
+const commentsByPostId = id =>
+  db
     .select()
     .table(tables.COMMENTS)
     .where({ post_id: id });
-  return data;
-};
 
 const create = ({ body, user_id, post_id }) =>
   db(tables.COMMENTS)

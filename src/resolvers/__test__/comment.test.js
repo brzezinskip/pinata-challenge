@@ -64,3 +64,16 @@ describe("remove comment", async () => {
     expect(getComment).toBeUndefined();
   });
 });
+
+describe("get comments by post id", async () => {
+  it("gets list of comments for given post", async () => {
+    const result = await comment.commentsByPostId(1);
+    result.forEach(c => expect(c.post_id).toBe(1));
+    expect(result).toBeInstanceOf(Array);
+  });
+  it("returns empty list if post id doesn't exist", async () => {
+    const result = await comment.commentsByPostId(9999);
+    console.log(result);
+    expect(result).toEqual([]);
+  });
+});
