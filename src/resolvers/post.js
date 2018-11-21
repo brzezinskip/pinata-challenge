@@ -13,14 +13,16 @@ const create = ({ title, body, user_id }) =>
   db(tables.POSTS)
     .insert({ title, body, user_id })
     .returning("id")
-    .then(([id]) => id);
+    .then(([id]) => id)
+    .catch(e => e);
 
 const remove = id =>
   db(tables.POSTS)
     .where({ id })
     .del()
     .returning("id")
-    .then(([id]) => id);
+    .then(([id]) => id)
+    .catch(e => e);
 
 const queries = {
   posts(_, { limit, after, orderBy }, ctx, info) {
@@ -50,6 +52,10 @@ const mutations = {
 module.exports = {
   post: {
     queries,
-    mutations
+    mutations,
+    byId,
+    all,
+    create,
+    remove
   }
 };
