@@ -1,4 +1,5 @@
 const { db, tables } = require("../../db/knex");
+const { paginatedQuery } = require("../lib/tools");
 
 const byId = id =>
   db(tables.POSTS)
@@ -22,19 +23,8 @@ const remove = id =>
     .then(([id]) => id);
 
 const queries = {
-  posts(_, { cursor, limit }, ctx, info) {
-    let query = all().orderBy("created_at", "DESC");
-    query = cursor
-      ? query.where("created_at", "<", new Date(parseInt(cursor))).limit(limit)
-      : query.limit(limit);
-    return query.then(rows => {
-      return {
-        edges: rows,
-        pageInfo: {
-          endCursor: rows[rows.length - 1].created_at
-        }
-      };
-    });
+  posts(_, { limit, after, orderBy }, ctx, info) {
+    return paginatedQuery(all, { limit, after, orderBy });
   },
   post(_, { id }, ctx, info) {
     return byId(id);
